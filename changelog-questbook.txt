@@ -1,0 +1,13 @@
+Changelog >
+
+30.10 první verze modelu brány v inventoru (model brany upload)
+
+Quest book >
+
+model brány (hotovo)
+arduino kod na funkčnost brány
+ozkoušet kod a komponenty
+zapojit všechno
+
+kamera
+kod na kameru
