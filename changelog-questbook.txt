@@ -2,6 +2,7 @@ Changelog >
 
 30.10 první verze modelu brány v inventoru (model brany upload)
 4.11 lehce upravena konstrukce, upraveny rozměry modelu, rozděleny částí na jednotlivé soubory (model brany uprava a rozdeleni upload)
+8.11 přidán kod na spínače, funkční "zapínání a vypínání" motoru
 
 Quest book >
 
