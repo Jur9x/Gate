@@ -5,6 +5,8 @@ const int RECV_PIN = 12;
 IRrecv irrecv(RECV_PIN);
 decode_results results;
 
+int a,b,c;
+
 unsigned long kodStartu = 3389572121;
 unsigned long kodStopu = 3439970883;
 
@@ -15,6 +17,22 @@ void setup(){
   pinMode(10, INPUT);//spinca
   pinMode(11, INPUT);//spinac
   pinMode(2, OUTPUT);//dioda
+  pinMode(9, OUTPUT);//IR senzor vzdálenosti
+}
+
+void setupIRSenzoruVzdalenosti(){
+  digitalWrite(9, HIGH);
+  delay(1);
+  a=analogRead(A3);
+  digitalWrite(9, LOW);
+  delay(1);
+  b=analogRead(A3);
+  c=a-b;
+
+  Serial.print(a);//signál se zapnutou ledkou na senzoru
+  Serial.print(b);//signál bez zapnuté ledky na senzoru
+  Serial.print(c);//signál bez okolního rušení
+  //c bude výsledek který budu chtít na if podmínku
 }
 
 void startMotor(){
