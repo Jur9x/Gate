@@ -3,6 +3,7 @@ Changelog >
 30.10 první verze modelu brány v inventoru (model brany upload)
 4.11 lehce upravena konstrukce, upraveny rozměry modelu, rozděleny částí na jednotlivé soubory (model brany uprava a rozdeleni upload)
 8.11 přidán kod na spínače, funkční "zapínání a vypínání" motoru
+9-13.11 jsem postupně upravoval kod, napsal jsem kod na snímač pohybu, který funguje a pokoušel jsem se zprovoznit motor, ale nešlo mi to, taky jsem domodeloval všechny potřebné části k fungování brány, designové části a některé designové časti ještě namodeluju
 
 Quest book >
 
@@ -10,6 +11,8 @@ model brány (hotovo)
 arduino kod na funkčnost brány
 ozkoušet kod a komponenty
 zapojit všechno
+
+overview v aplikaci buď na mobilu, nebo na lokální stránce
 
 kamera
 kod na kameru
