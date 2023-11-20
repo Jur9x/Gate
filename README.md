@@ -1,5 +1,5 @@
 # Gate
-## *Zlatá brána otevřena*
+### <sub>*Zlatá brána otevřena*</sub>
 Maturitní projekt - brána
 
 ## Cíle:
