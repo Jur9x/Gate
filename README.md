@@ -1,6 +1,5 @@
 # Gate
-### <sub>*Zlatá brána otevřena*</sub>
-Maturitní projekt - brána
+Maturitní projekt - ### <sub>*Zlatá brána otevřena*</sub>
 
 ## Cíle:
 * vytvoření modelu brány
