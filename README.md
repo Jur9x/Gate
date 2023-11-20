@@ -1,4 +1,5 @@
 # Gate
+##**Zlatá brána otevřena
 Maturitní projekt - brána
 
 ## Cíle:
