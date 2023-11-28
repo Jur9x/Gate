@@ -5,65 +5,73 @@ const int RECV_PIN = 12;
 IRrecv irrecv(RECV_PIN);
 decode_results results;
 
-int spinacZavreno = 10;
-int spinacOtevreno = 11;
-
-int stavOtevreSe = 0;
-int stavZavreSe = 1;
-
 byte speed = 255;
 
 unsigned long kodStartu = 3389572121;
 unsigned long kodStopu = 3439970883;
 
+stav = 1 //1 doleva 2 doprava
+
 void setup(){
   Serial.begin(9600);
   irrecv.enableIRIn();
   irrecv.blink13(true);
-  pinMode(10, INPUT);//spinca
-  pinMode(11, INPUT);//spinac
-  pinMode(2, OUTPUT);//motor
-  pinMode(3, OUTPUT);//motor
-  pinMode(8, INPUT);//IR senzor
-}
-
-void startMotor(){ //nevim na jakou stranu se jak toci//
-  digitalWrite(2, HIGH);
-  digitalWrite(3, LOW);
-  /*if(stavOtevreSe = 1){   ^^^^ kod na test h mustku
-    analogWrite(5, speed); real kod
-    analogWrite(6, 0);
-  }
-  if(stavZavreSe = 1){
-    analogWrite(6, speed);
-    analogWrite(5, 0);
-  }*/
-}
-
-void stopMotor(){
-  digitalWrite(5, LOW);
-  digitalWrite(6, LOW);
+  pinMode(10, INPUT);//spinac levy
+  pinMode(11, INPUT);//spinac pravy
+  pinMode(2, OUTPUT);//motor //strany vůbec nevim
+  pinMode(3, OUTPUT);//motor //strany vůbec nevim
+  pinMode(8, INPUT);//IR senzor LOW A HIHG JE NAOPAK
 }
 
 void loop(){
-  if(spinacZavreno == HIGH){
-    //prednastavi stav brany
-    stavOtevreSe = 1;
-    stavZavreSe = 0;
-  }
-  if(spinacOtevreno == HIGH){
-    //prednastavi stav brany
-    stavOtevreSe = 0;
-    stavZavreSe = 1;
-  }
+  //nevim jak udelat at to bere ten kod
   if (irrecv.decode(&results)){             //
         Serial.println(results.value, DEC); // Precte signal
         irrecv.resume();                    //
   }
-  if (results.value == kodStartu){
-    startMotor();
+  if (results.value =! kodStopu && results.value == kodStartu && digitalRead(10) == LOW && digitalRead(11) == HIGH && digitalRead(8) == HIGH) {
+    n=1;
   }
-  if (results.value == kodStopu || digitalRead(10) == HIGH || digitalRead(11) == HIGH || digitalRead(8) == LOW) { //10 a 11 jsou spinace na koncich koleje
-    stopMotor();
+  else if (results.value =! kodStopu && results.value =! kodStartu && digitalRead(10) == HIGH && digitalRead(11) == LOW && digitalRead(8) == HIGH) {
+    n=2;
   }
+  else if (results.value =! kodStopu && results.value == kodStartu && digitalRead(10) == HIGH && digitalRead(11) == LOW && digitalRead(8) == HIGH) {
+    n=1;
+  }
+  else if (results.value =! kodStopu && results.value =! kodStartu && digitalRead(10) == LOW && digitalRead(11) == HIGH && digitalRead(8) == HIGH) {
+    n=2;
+  }
+  else if (results.value =! kodStopu && results.value =! kodStartu && digitalRead(10) == LOW && digitalRead(11) == LOW && digitalRead(8) == LOW) {
+    n=2;
+  }
+  else if (results.value =! kodStopu && results.value == kodStartu && digitalRead(10) == HIGH && digitalRead(11) == LOW && digitalRead(8) == LOW) {
+    n=2;
+  }
+  else if (results.value =! kodStopu && results.value == kodStartu && digitalRead(10) == LOW && digitalRead(11) == HIGH && digitalRead(8) == LOW) {
+    n=2;
+  }else if (results.value == kodStopu && results.value =! kodStartu && digitalRead(10) == LOW && digitalRead(11) == LOW && digitalRead(8) == HIGH) {
+    n=2;
+  }
+  if (digitalRead(10) == HIGH && stav == 1){
+    stav = 2;
+  }else if (digitalRead(11) == HIGH && stav == 2){
+    stav = 1;
+  }
+  switch (n) {
+  case 1:
+    if(stav == 1){
+          digitalWrite(2, speed);
+          digitalWrite(3, LOW);
+    }else if (stav == 2){
+          digitalWrite(2, LOW);
+          digitalWrite(3, speed);
+    }
+    break;
+  case 2:
+    digitalWrite(2, LOW);
+    digitalWrite(3, LOW);
+    break;
+  default:
+    break;
+}
 }
