@@ -21,7 +21,7 @@ int ledNejede = 8;
 int levySpinac = digitalRead(10);
 int pravySpinac = digitalRead(11);
 
-int IRsenzorPohybu = digitalRead(9);;
+int IRsenzorPohybu = 9;
 
 int motorPravy = 2;
 int motorLevy = 3;
@@ -35,17 +35,21 @@ void setup(){
   pinMode(ledVlevo, OUTPUT);
   pinMode(ledVpravo, OUTPUT);
   pinMode(ledUprostred, OUTPUT);
-  pinMode(levySpinac, INPUT_PULLUP);
-  pinMode(pravySpinac, INPUT_PULLUP);
-  pinMode(motorLevy, OUTPUT);
-  pinMode(motorPravy, OUTPUT);
-  pinMode(IRsenzorPohybu, INPUT);
+  pinMode(10, INPUT_PULLUP);
+  pinMode(11, INPUT_PULLUP);
+  pinMode(motorLevy, OUTPUT);//strany vůbec nevim
+  pinMode(motorPravy, OUTPUT);//strany vůbec nevim
+  pinMode(9, INPUT);
   pravy.setDebounceTime(100);
   levy.setDebounceTime(100);
 }
 
-void podminky(){
-  if(IRsenzorPohybu == HIGH){
+void loop(){
+  if (irrecv.decode(&results)){
+        Serial.println(results.value, DEC);
+        irrecv.resume(); 
+  }
+  if(digitalRead(IRsenzorPohybu) == HIGH){
       //senzor nic nesnímá
       if(results.value != kodStopu){
         if(results.value != kodStartu){
@@ -55,38 +59,40 @@ void podminky(){
         }else if(((levySpinac == HIGH && pravySpinac == LOW) || (levySpinac == LOW && pravySpinac == HIGH)) || (levySpinac == LOW && pravySpinac == LOW)){
           n = 1;
         }
-      }else(n=2);
-  }else if(IRsenzorPohybu == LOW){
+      }else(n = 2);
+  }else if(digitalRead(IRsenzorPohybu) == LOW){
     //senzor něco snímá
     //nastavením na kod stopu se zastaví úplně a ne jen při snímání
+    n = 2;
     results.value = kodStopu;
+    Serial.println("NEJEDE NA SENZOR");
   }
-}
-
-void sr(){
-  if (levySpinac == HIGH && smer == 1){
+  
+  if (digitalRead(10) == HIGH && smer == 1){
+    results.value = 0;
     smer = 2;
+  }else if (digitalRead(11) == HIGH && smer == 2){
     results.value = 0;
-  }else if (pravySpinac == HIGH && smer == 2){
     smer = 1;
-    results.value = 0;
   }
-}
-
-void sw(){
-    switch (n) {
+  switch (n) {
   case 1:
     digitalWrite(ledUprostred, HIGH);
     if(smer == 1){
           digitalWrite(motorPravy, HIGH);
           digitalWrite(motorLevy, LOW);
+          Serial.println("jede doleva");
           digitalWrite(ledVpravo, HIGH);
           digitalWrite(ledVlevo, LOW);
+          Serial.println(results.value, DEC);
+          Serial.println(n);
     }else if (smer == 2){
           digitalWrite(motorPravy, LOW);
           digitalWrite(motorLevy, HIGH);
+          Serial.println("jede doprava");
           digitalWrite(ledVlevo, HIGH);
           digitalWrite(ledVpravo, LOW);
+          Serial.println(n);
     }
     break;
   case 2:
@@ -95,16 +101,10 @@ void sw(){
     digitalWrite(ledVpravo, LOW);
     digitalWrite(motorPravy, LOW);
     digitalWrite(motorLevy, LOW);
+    Serial.println("stoji");
+    Serial.println(n);
     break;
-    }
-}
-
-void loop(){
-  if (irrecv.decode(&results)){
-        Serial.println(results.value, DEC);
-        irrecv.resume(); 
+  default:
+    break;
   }
-  podminky();
-  sr();
-  sw();
   }
