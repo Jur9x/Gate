@@ -1,5 +1,4 @@
 #include <IRremote.h>
-#include <ezButton.h>
 
 const int RECV_PIN = 12;
 IRrecv irrecv(RECV_PIN);
@@ -38,9 +37,8 @@ void loop() {
     Serial.println(results.value, DEC);
     irrecv.resume();
   }
-  int irSensorState = digitalRead(IRsenzorPohybu);
-  if (irSensorState == HIGH) {
-    if (results.value != kodStopu && ((results.value == kodStartu && (buttonPins[0] != HIGH || buttonPins[1] != HIGH)) || (buttonPins[0] == LOW && buttonPins[1] == LOW))) {
+  if (digitalRead(IRsenzorPohybu) == HIGH) {
+    if (results.value != kodStopu && ((results.value == kodStartu && (digitalRead(buttonPins[0]) != HIGH || digitalRead(buttonPins[1]) != HIGH)) || (digitalRead(buttonPins[0]) == LOW && digitalRead(buttonPins[1]) == LOW))) {
       n = 1;
     } else {
       n = 2;
@@ -49,11 +47,9 @@ void loop() {
     n = 2;
     results.value = kodStopu;
   }
-
   if ((digitalRead(buttonPins[0]) == HIGH && smer == 1) || (digitalRead(buttonPins[1]) == HIGH && smer == 2)) {
     results.value = 0;
     smer = 3 - smer;
   }
-
   handleMovement();
 }
