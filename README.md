@@ -5,10 +5,10 @@ Maturitní projekt - *Zlatá brána otevřena*
 * vytvoření modelu brány
 * otevírání pomocí dálkového ovládání
 * senzor na zamezení zavření
-* overview v aplikaci na mobilu
 
 ## Možné doplnění:
 * otevírání na autentizaci spz
+* overview v aplikaci na mobilu
 
 ## Použité technologie:
 
