@@ -1,73 +1,90 @@
 #include <IRremote.h>
 
 const int RECV_PIN = 12;
+const int LED_Uprostred_Pin = 6;
+const int LED_Vlevo_Pin = 4;
+const int LED_Vpravo_Pin = 5;
+const int Motor_Pravy_Pin = 2;
+const int Motor_Levy_Pin = 3;
+const int Button_Levy_Pin = 10;
+const int Button_Pravy_Pin = 11;
+const int IR_Senzor_Pohybu_Pin = 9;
+
+const unsigned long OPEN_CODE = 3328992116;
+const unsigned long CLOSE_CODE = 404571636;
+const unsigned long STOP_CODE = 204228740;
+
+enum Direction { STOP = 0, LEFT = 1, RIGHT = 2 };
+
 IRrecv irrecv(RECV_PIN);
 decode_results results;
 
-unsigned long kodZavrit = 3328992116;
-unsigned long kodOtevrit = 404571636;
-unsigned long kodStopu = 204228740;
-
-int smer = 0; // 1 doleva 2 doprava
+int direction = STOP;
 int n = 0;
-
-int ledPins[] = {6, 4, 5};  // ledUprostred, ledVlevo, ledVpravo
-int motorPins[] = {2, 3};   // motorPravy, motorLevy
-int buttonPins[] = {10, 11}; // levySpinac, pravySpinac
-int IRsenzorPohybu = 9;
 
 void setup() {
   Serial.begin(9600);
   irrecv.enableIRIn();
-  for (int pin : ledPins) pinMode(pin, OUTPUT);
-  for (int pin : buttonPins) pinMode(pin, INPUT_PULLUP);
-  for (int pin : motorPins) pinMode(pin, OUTPUT);
-  pinMode(IRsenzorPohybu, INPUT);
+  pinMode(LED_Uprostred_Pin, OUTPUT);
+  pinMode(LED_Vlevo_Pin, OUTPUT);
+  pinMode(LED_Vpravo_Pin, OUTPUT);
+  pinMode(Motor_Pravy_Pin, OUTPUT);
+  pinMode(Motor_Levy_Pin, OUTPUT);
+  pinMode(Button_Levy_Pin, INPUT_PULLUP);
+  pinMode(Button_Pravy_Pin, INPUT_PULLUP);
+  pinMode(IR_Senzor_Pohybu_Pin, INPUT);
 }
 
-void handleMovement() {
-  digitalWrite(ledPins[0], n == 1);
-  digitalWrite(ledPins[1], n == 1 && smer == 1);
-  digitalWrite(ledPins[2], n == 1 && smer == 2);
-  digitalWrite(motorPins[0], n == 1 && smer == 1);
-  digitalWrite(motorPins[1], n == 1 && smer == 2);
-  delay(160);
-  Serial.println(n);
+void handleLEDsAndMotors() {
+  digitalWrite(LED_Uprostred_Pin, n == 1);
+  digitalWrite(LED_Vlevo_Pin, n == 1 && direction == LEFT);
+  digitalWrite(LED_Vpravo_Pin, n == 1 && direction == RIGHT);
+  digitalWrite(Motor_Pravy_Pin, n == 1 && direction == LEFT);
+  digitalWrite(Motor_Levy_Pin, n == 1 && direction == RIGHT);
+
+  if (n == 1) {
+    delay(180);
+    }
+}
+void checkIRSensorAndButtons() {
+  bool buttonLevyPressed = (digitalRead(Button_Levy_Pin) == HIGH);
+  bool buttonPravyPressed = (digitalRead(Button_Pravy_Pin) == HIGH);
+  bool irSensorHigh = (digitalRead(IR_Senzor_Pohybu_Pin) == HIGH);
+
+  if (irSensorHigh) {
+    if (results.value != STOP_CODE) {
+      if (results.value != OPEN_CODE && results.value != CLOSE_CODE) {
+        if ((buttonPravyPressed && !buttonLevyPressed) || (!buttonPravyPressed && buttonLevyPressed)) {
+          n = 2;
+        }
+      } else if (!buttonLevyPressed || !buttonPravyPressed) {
+        n = 1;
+      }
+    } else {
+      n = 2;
+    }
+  } else {
+    n = 2;
+    results.value = STOP_CODE;
+  }
 }
 
-//idk jestli funguje tak jak má, na zavírání a otevírání tho :)
+void processIRResults() {
+  if (results.value == OPEN_CODE) {
+    direction = LEFT;
+    results.value = 0;
+  } else if (results.value == CLOSE_CODE) {
+    direction = RIGHT;
+    results.value = 0;
+  }
+}
+
 void loop() {
   if (irrecv.decode(&results)) {
-    Serial.println(results.value, DEC);
     irrecv.resume();
   }
 
-  if(digitalRead(IRsenzorPohybu) == HIGH){
-     if (results.value != kodStopu){
-        if((results.value != kodOtevrit && results.value != kodZavrit) || (results.value == kodOtevrit && results.value == kodZavrit)){
-          if((digitalRead(buttonPins[1]) == LOW && digitalRead(buttonPins[0]) == HIGH) || (digitalRead(buttonPins[0]) == LOW && digitalRead(buttonPins[1]) == HIGH)){
-            n = 2;
-            Serial.println("TADYNAHORE"); 
-          }
-        }else if(((digitalRead(buttonPins[1]) == LOW && digitalRead(buttonPins[0]) == HIGH) || (digitalRead(buttonPins[0]) == LOW && digitalRead(buttonPins[1]) == HIGH)) || (digitalRead(buttonPins[0]) == LOW && digitalRead(buttonPins[1]) == LOW)){
-          n = 1; 
-        }
-      }else {
-      n = 2;
-      Serial.println("TADYDOLE1");
-      }
-  }else {
-    n = 2;
-    results.value = kodStopu;
-    Serial.println("TADYDOLE2");
-  }
-
-  if (results.value == kodOtevrit) {
-    smer = 1;
-    results.value = 0;
-  }else if(results.value == kodZavrit){
-    smer = 2;
-    results.value = 0;
-  }
-  handleMovement();
+  checkIRSensorAndButtons();
+  processIRResults();
+  handleLEDsAndMotors();
 }
