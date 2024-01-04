@@ -30,8 +30,8 @@ void setup() {
   pinMode(LED_Vpravo_Pin, OUTPUT);
   pinMode(Motor_Pravy_Pin, OUTPUT);
   pinMode(Motor_Levy_Pin, OUTPUT);
-  pinMode(Button_Levy_Pin, INPUT_PULLUP);
-  pinMode(Button_Pravy_Pin, INPUT_PULLUP);
+  pinMode(Button_Levy_Pin, INPUT);
+  pinMode(Button_Pravy_Pin, INPUT);
   pinMode(IR_Senzor_Pohybu_Pin, INPUT);
 }
 
