@@ -6,13 +6,15 @@ Changelog >
 9-13.11 jsem postupně upravoval kod, napsal jsem kod na snímač pohybu, který funguje a pokoušel jsem se zprovoznit motor, ale nešlo mi to, taky jsem domodeloval všechny potřebné části k fungování brány, designové části a některé designové časti ještě namodeluju
 16-25.11 jsem upravoval kod, dostal jsem se konečně k funkčnímu prototypu kodu
 29.11 jsem s panem Godovským dořešil modely, snad už budou fungovat.
-5.12-27.12 jsem dodělal modely, dopsal kod (až na polofunkční ovladač, ale ten možná ještě vyřeším)  
+5.12-27.12 jsem dodělal modely, dopsal kod (až na polofunkční ovladač, ale ten možná ještě vyřeším)
+1.1-10.1 vytváření dokumentace
+12.1 upload dokumentace
 
 Quest book >
 
 model brány (hotovo)
-arduino kod na funkčnost brány (hotovo, bez ovladače)
+arduino kod na funkčnost brány (hotovo)
 ozkoušet kod a komponenty (hotovo)
 zapojit všechno (hotovo)
-slepení brány 
-napsat dokumentaci 
+slepení brány (hotov)
+napsat dokumentaci (hotovo)
