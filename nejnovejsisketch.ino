@@ -23,7 +23,6 @@ int direction = STOP;
 int n = 0;
 
 void setup() {
-  Serial.begin(9600);
   irrecv.enableIRIn();
   pinMode(LED_Uprostred_Pin, OUTPUT);
   pinMode(LED_Vlevo_Pin, OUTPUT);
