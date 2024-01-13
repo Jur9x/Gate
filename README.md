@@ -1,5 +1,5 @@
 # Gate
-Maturitní projekt - *Zlatá brána otevřena*
+Maturitní projekt - *modelGate*
 
 ## Cíle:
 * vytvoření modelu brány
